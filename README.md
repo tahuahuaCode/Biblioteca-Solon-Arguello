@@ -264,3 +264,10 @@ https://youtu.be/AOY_diBiPic
 - No subas datos personales de usuarios, archivos de respaldo ni información de acceso a la base de datos. Los respaldos pueden contener los documentos completos y deben tratarse como información privada.
 - Para demostraciones y pruebas manuales, usa datos ficticios o autorizados y una base de datos de prueba; evita modificar datos reales de la biblioteca.
 - `npm run seed` está definido en `package.json`, pero realiza operaciones de escritura. No lo ejecutes contra una base con datos reales o compartidos; no es necesario para correr `npm test`.
+
+## Documento técnico comparativo
+
+Se realizó una investigación comparativa entre MongoDB y Neo4j
+para determinar cuál se adapta mejor a las necesidades del proyecto.
+
+[Consultar documento técnico MongoDB vs. Neo4j](docs/Biblioteca_Solon_Arguello_Comparativo_Tecnico.docx)
