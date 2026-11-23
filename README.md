@@ -245,11 +245,18 @@ El 23 de noviembre de 2026, el equipo presentó el sistema de gestión bibliotec
 
 Después de la visita, el equipo incorporó estas mejoras en la interfaz y amplió el flujo de gestión con ejemplares físicos, registro de préstamos y devoluciones, búsqueda y paginación. Los buscadores de libros y usuarios se añadieron por iniciativa del equipo para facilitar la localización de información. Esta descripción recoge las recomendaciones compartidas por el equipo; no implica un visto bueno formal de la institución.
 
+
 ## Video de presentación
 
-El video de la entrevista y presentación está pendiente de publicarse en YouTube. El enlace se añadirá aquí cuando esté disponible:
+Como parte del proyecto, se realizó una visita a la Biblioteca Solón Argüello para presentar el sistema desarrollado y recibir recomendaciones del personal.
 
-> **Enlace de YouTube:** pendiente de incorporar.
+Durante la entrevista se abordaron aspectos relacionados con el diseño de la interfaz, la gestión de libros, los préstamos y las devoluciones.
+
+Las sugerencias recibidas permitieron mejorar el sistema y adaptarlo a las necesidades identificadas durante la visita.
+
+**Video de la entrevista y presentación:**
+
+https://youtu.be/AOY_diBiPic
 
 ## Seguridad y datos de prueba
 
