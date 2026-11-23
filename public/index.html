@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#70263D">
+    <title>Biblioteca Solón Argüello | Sistema de Gestión Bibliotecaria</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#inicio" aria-label="Biblioteca Solón Argüello, inicio">
+        <span class="brand-mark" aria-hidden="true">SA</span>
+        <span class="brand-copy"><strong>Biblioteca Solón Argüello</strong><small>Sistema de Gestión Bibliotecaria</small></span>
+      </a>
+      <nav class="main-nav" aria-label="Navegación principal">
+        <a href="#inicio" data-route="inicio">Inicio</a>
+        <a href="#libros" data-route="libros">Libros</a>
+        <a href="#usuarios" data-route="usuarios">Usuarios</a>
+        <a href="#prestamos" data-route="prestamos">Préstamos</a>
+        <a href="#devoluciones" data-route="devoluciones">Devoluciones</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="view" id="view-inicio" data-view="inicio">
+        <div class="page-heading welcome-heading">
+          <div>
+            <p class="eyebrow">PANEL GENERAL</p>
+            <h1>Bienvenido a la biblioteca</h1>
+            <p>Consulta el estado actual del catálogo y la circulación.</p>
+          </div>
+          <button class="button secondary" type="button" data-refresh="dashboard">Actualizar datos</button>
+        </div>
+        <div id="dashboard-message" class="notice" role="status" aria-live="polite"></div>
+        <section class="stat-grid" aria-label="Indicadores de la biblioteca">
+          <article class="stat-card"><span>Total de libros</span><strong id="stat-books">—</strong><small>Registros del catálogo</small></article>
+          <article class="stat-card"><span>Total de usuarios</span><strong id="stat-users">—</strong><small>Personas registradas</small></article>
+          <article class="stat-card"><span>Ejemplares disponibles</span><strong id="stat-copies">—</strong><small>Listos para préstamo</small></article>
+          <article class="stat-card"><span>Préstamos activos</span><strong id="stat-active">—</strong><small>Dentro del plazo</small></article>
+          <article class="stat-card stat-card-alert"><span>Préstamos vencidos</span><strong id="stat-overdue">—</strong><small>Requieren seguimiento</small></article>
+        </section>
+        <section class="dashboard-grid">
+          <article class="card list-card">
+            <div class="section-heading"><div><h2>Préstamos recientes</h2><p>Movimientos registrados más recientemente</p></div><a class="inline-link" href="#prestamos">Ver todos</a></div>
+            <div class="table-wrap">
+              <table><thead><tr><th>Libro</th><th>Usuario</th><th>Préstamo</th><th>Devolución límite</th><th>Estado</th></tr></thead><tbody id="recent-loans"></tbody></table>
+            </div>
+          </article>
+          <article class="card list-card">
+            <div class="section-heading"><div><h2>Préstamos vencidos</h2><p>Casos pendientes de devolución</p></div><a class="inline-link" href="#devoluciones">Consultar</a></div>
+            <div class="table-wrap">
+              <table><thead><tr><th>Libro</th><th>Usuario</th><th>Vencimiento</th><th>Retraso</th></tr></thead><tbody id="dashboard-overdue"></tbody></table>
+            </div>
+          </article>
+        </section>
+      </section>
+
+      <section class="view" id="view-libros" data-view="libros" hidden>
+        <div class="page-heading">
+          <div><p class="eyebrow">CATÁLOGO</p><h1>Libros</h1><p>Registra y mantén organizada la colección de la biblioteca.</p></div>
+          <button class="button secondary" type="button" data-refresh="books">Actualizar</button>
+        </div>
+        <div class="crud-layout">
+          <form id="book-form" class="card form-card">
+            <p class="eyebrow">GESTIÓN DEL CATÁLOGO</p><h2 id="book-form-title">Agregar libro</h2>
+            <label for="book-title">Título<input id="book-title" name="title" required maxlength="160" placeholder="Ej. Cien años de soledad"></label>
+            <label for="book-author">Autor<input id="book-author" name="author" required maxlength="120" placeholder="Nombre del autor"></label>
+            <label for="book-isbn">ISBN<input id="book-isbn" name="isbn" required maxlength="30" placeholder="978-..."></label>
+            <div class="field-row">
+              <label for="book-year">Año<input id="book-year" name="publishedYear" type="number" min="0" max="9999" placeholder="1967"></label>
+              <label for="book-genre">Género<input id="book-genre" name="genre" maxlength="80" placeholder="Novela"></label>
+            </div>
+            <label class="checkbox-option" id="book-first-copy-field"><input id="book-first-copy" type="checkbox"> Registrar primer ejemplar</label>
+            <div class="form-actions"><button type="submit" class="button primary" id="book-submit">Guardar libro</button><button type="button" class="button secondary hidden" id="book-cancel">Cancelar</button></div>
+            <p id="book-form-message" class="message" role="status" aria-live="polite"></p>
+          </form>
+          <section class="card list-card" aria-labelledby="books-list-title">
+            <div class="section-heading"><div><h2 id="books-list-title">Libros registrados</h2><p id="books-count">Cargando...</p></div></div>
+            <div class="toolbar"><label class="search-field" for="books-search">Buscar libros<input id="books-search" type="search" placeholder="Título, autor, género o ISBN"></label><label class="filter-field" for="books-genre">Género<select id="books-genre"><option value="">Todos los géneros</option></select></label></div>
+            <div id="books-message" class="message" role="status" aria-live="polite"></div>
+            <div class="table-wrap">
+              <table><thead><tr><th>Título</th><th>Autor</th><th>Género</th><th>ISBN</th><th>Año</th><th>Acciones</th></tr></thead><tbody id="books-list"></tbody></table>
+            </div>
+            <div class="pagination" id="books-pagination">
+              <label>Por página<select id="books-page-size"><option>10</option><option>25</option><option>50</option></select></label>
+              <span id="books-page-info">Página 1 de 1 · 0 resultados</span>
+              <div><button class="button secondary" id="books-previous" type="button">Anterior</button><button class="button secondary" id="books-next" type="button">Siguiente</button></div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="view-usuarios" data-view="usuarios" hidden>
+        <div class="page-heading">
+          <div><p class="eyebrow">DIRECTORIO</p><h1>Usuarios</h1><p>Administra los datos básicos de las personas usuarias.</p></div>
+          <button class="button secondary" type="button" data-refresh="users">Actualizar</button>
+        </div>
+        <div class="crud-layout">
+          <form id="user-form" class="card form-card">
+            <p class="eyebrow">GESTIÓN DE USUARIOS</p><h2 id="user-form-title">Agregar usuario</h2>
+            <label for="user-name">Nombre completo<input id="user-name" name="fullName" required maxlength="140" placeholder="Nombre y apellidos"></label>
+            <label for="user-email">Correo electrónico<input id="user-email" name="email" type="email" required maxlength="180" placeholder="persona@correo.com"></label>
+            <label for="user-phone">Teléfono <span class="optional">(opcional)</span><input id="user-phone" name="phone" maxlength="40" placeholder="+00 000 000 0000"></label>
+            <div class="form-actions"><button type="submit" class="button primary" id="user-submit">Guardar usuario</button><button type="button" class="button secondary hidden" id="user-cancel">Cancelar</button></div>
+            <p id="user-form-message" class="message" role="status" aria-live="polite"></p>
+          </form>
+          <section class="card list-card" aria-labelledby="users-list-title">
+            <div class="section-heading"><div><h2 id="users-list-title">Usuarios registrados</h2><p id="users-count">Cargando...</p></div></div>
+            <div class="toolbar"><label class="search-field" for="users-search">Buscar usuarios<input id="users-search" type="search" placeholder="Nombre o correo electrónico"></label></div>
+            <div id="users-message" class="message" role="status" aria-live="polite"></div>
+            <div class="table-wrap">
+              <table><thead><tr><th>Nombre</th><th>Correo electrónico</th><th>Teléfono</th><th>Acciones</th></tr></thead><tbody id="users-list"></tbody></table>
+            </div>
+            <div class="pagination" id="users-pagination">
+              <label>Por página<select id="users-page-size"><option>10</option><option>25</option><option>50</option></select></label>
+              <span id="users-page-info">Página 1 de 1 · 0 resultados</span>
+              <div><button class="button secondary" id="users-previous" type="button">Anterior</button><button class="button secondary" id="users-next" type="button">Siguiente</button></div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="view-prestamos" data-view="prestamos" hidden>
+        <div class="page-heading">
+          <div><p class="eyebrow">CIRCULACIÓN</p><h1>Préstamos</h1><p>Consulta los ejemplares prestados y sus fechas de devolución.</p></div>
+          <div class="heading-actions"><button class="button secondary" type="button" data-refresh="loans">Actualizar</button><button class="button primary" id="open-loan-dialog" type="button">+ Nuevo préstamo</button></div>
+        </div>
+        <section class="card list-card">
+          <div class="section-heading"><div><h2>Registro de préstamos</h2><p id="loans-count">Cargando...</p></div></div>
+          <div id="loan-operation-message" class="notice" role="status" aria-live="polite"></div>
+          <div class="toolbar"><label class="search-field" for="loans-search">Buscar préstamos<input id="loans-search" type="search" placeholder="Libro, usuario o código de inventario"></label><label class="filter-field" for="loans-status">Estado<select id="loans-status"><option value="">Todos los estados</option><option value="active">Activos</option><option value="overdue">Vencidos</option><option value="returned">Devueltos</option></select></label></div>
+          <div id="loans-message" class="message" role="status" aria-live="polite"></div>
+          <div class="table-wrap">
+            <table><thead><tr><th>Libro</th><th>Usuario responsable</th><th>Inventario</th><th>Fecha préstamo</th><th>Fecha límite</th><th>Estado</th><th>Plazo</th><th>Acciones</th></tr></thead><tbody id="loans-list"></tbody></table>
+          </div>
+          <div class="pagination" id="loans-pagination">
+            <label>Por página<select id="loans-page-size"><option>10</option><option>25</option><option>50</option></select></label>
+            <span id="loans-page-info">Página 1 de 1 · 0 resultados</span>
+            <div><button class="button secondary" id="loans-previous" type="button">Anterior</button><button class="button secondary" id="loans-next" type="button">Siguiente</button></div>
+          </div>
+        </section>
+      </section>
+
+      <section class="view" id="view-devoluciones" data-view="devoluciones" hidden>
+        <div class="page-heading">
+          <div><p class="eyebrow">SEGUIMIENTO</p><h1>Devoluciones</h1><p>Consulta el historial de devoluciones y los préstamos que requieren atención.</p></div>
+          <div class="heading-actions"><button class="button secondary" type="button" data-refresh="returns">Actualizar</button><button class="button primary" id="open-return-dialog" type="button">Registrar devolución</button></div>
+        </div>
+        <section class="card list-card">
+          <div class="section-heading"><div><h2>Devoluciones y retrasos</h2><p id="returns-count">Cargando...</p></div></div>
+          <div id="return-operation-message" class="notice" role="status" aria-live="polite"></div>
+          <div class="toolbar"><label class="search-field" for="returns-search">Buscar registros<input id="returns-search" type="search" placeholder="Libro, usuario o código de inventario"></label><label class="filter-field" for="returns-status">Mostrar<select id="returns-status"><option value="">Devueltos y vencidos</option><option value="returned">Devueltos</option><option value="overdue">Vencidos</option></select></label></div>
+          <div id="returns-message" class="message" role="status" aria-live="polite"></div>
+          <div class="table-wrap">
+            <table><thead><tr><th>Libro</th><th>Usuario responsable</th><th>Inventario</th><th>Fecha préstamo</th><th>Fecha límite</th><th>Fecha devolución</th><th>Estado</th><th>Días de retraso</th><th>Acciones</th></tr></thead><tbody id="returns-list"></tbody></table>
+          </div>
+          <div class="pagination" id="returns-pagination">
+            <label>Por página<select id="returns-page-size"><option>10</option><option>25</option><option>50</option></select></label>
+            <span id="returns-page-info">Página 1 de 1 · 0 resultados</span>
+            <div><button class="button secondary" id="returns-previous" type="button">Anterior</button><button class="button secondary" id="returns-next" type="button">Siguiente</button></div>
+          </div>
+        </section>
+      </section>
+    </main>
+    <dialog class="modal" id="copies-dialog" aria-labelledby="copies-dialog-title">
+      <div class="modal-card">
+        <div class="modal-heading">
+          <div><p class="eyebrow">INVENTARIO FÍSICO</p><h2 id="copies-dialog-title">Gestionar ejemplares</h2><p id="copies-book-title" class="modal-subtitle"></p></div>
+          <button class="icon-button" type="button" data-close-dialog="copies-dialog" aria-label="Cerrar">×</button>
+        </div>
+        <div class="copy-stats" aria-label="Resumen de ejemplares">
+          <article><span>Total</span><strong id="copies-total">—</strong></article>
+          <article><span>Disponibles</span><strong id="copies-available">—</strong></article>
+          <article><span>Prestados</span><strong id="copies-loaned">—</strong></article>
+          <article><span>Mantenimiento</span><strong id="copies-maintenance">—</strong></article>
+        </div>
+        <div class="section-heading copies-heading"><div><h3>Ejemplares del libro</h3></div><button class="button primary" id="add-copy-button" type="button">+ Registrar ejemplar</button></div>
+        <div id="copies-message" class="message" role="status" aria-live="polite"></div>
+        <div class="table-wrap">
+          <table><thead><tr><th>Código de inventario</th><th>Disponibilidad</th></tr></thead><tbody id="copies-list"></tbody></table>
+        </div>
+      </div>
+    </dialog>
+    <dialog class="modal" id="loan-dialog" aria-labelledby="loan-dialog-title">
+      <div class="modal-card">
+        <div class="modal-heading"><div><p class="eyebrow">CIRCULACIÓN</p><h2 id="loan-dialog-title">Registrar préstamo</h2></div><button class="icon-button" type="button" data-close-dialog="loan-dialog" aria-label="Cerrar">×</button></div>
+        <form id="loan-form">
+          <label for="loan-book-search">Buscar libro<input id="loan-book-search" type="search" autocomplete="off" placeholder="Título, autor, género o ISBN"></label>
+          <label for="loan-book-select">Libro<select id="loan-book-select" size="4" required><option value="">Escribe para buscar libros</option></select></label>
+          <label for="loan-copy-select">Ejemplar disponible<select id="loan-copy-select" required disabled><option value="">Selecciona un libro primero</option></select></label>
+          <label for="loan-user-search">Buscar usuario<input id="loan-user-search" type="search" autocomplete="off" placeholder="Nombre o correo electrónico"></label>
+          <label for="loan-user-select">Usuario responsable<select id="loan-user-select" size="4" required><option value="">Escribe para buscar usuarios</option></select></label>
+          <div class="field-row">
+            <label for="loan-date">Fecha del préstamo<input id="loan-date" type="date" required></label>
+            <label for="loan-due-date">Fecha límite<input id="loan-due-date" type="date" required></label>
+          </div>
+          <p id="loan-form-message" class="message" role="status" aria-live="polite"></p>
+          <div class="form-actions"><button class="button primary" id="loan-submit" type="submit">Registrar préstamo</button><button class="button secondary" type="button" data-close-dialog="loan-dialog">Cancelar</button></div>
+        </form>
+      </div>
+    </dialog>
+    <dialog class="modal" id="return-dialog" aria-labelledby="return-dialog-title">
+      <div class="modal-card">
+        <div class="modal-heading"><div><p class="eyebrow">SEGUIMIENTO</p><h2 id="return-dialog-title">Registrar devolución</h2></div><button class="icon-button" type="button" data-close-dialog="return-dialog" aria-label="Cerrar">×</button></div>
+        <form id="return-form">
+          <label for="return-search">Buscar préstamo pendiente<input id="return-search" type="search" autocomplete="off" placeholder="Libro, usuario o código de inventario"></label>
+          <label for="return-loan-select">Préstamo pendiente<select id="return-loan-select" size="5" required><option value="">Cargando préstamos pendientes…</option></select></label>
+          <div class="loan-summary" id="return-summary"><p>Selecciona un préstamo para revisar sus datos.</p></div>
+          <label for="return-date">Fecha de devolución<input id="return-date" type="date" required></label>
+          <p id="return-form-message" class="message" role="status" aria-live="polite"></p>
+          <div class="form-actions"><button class="button primary" id="return-submit" type="submit" disabled>Confirmar devolución</button><button class="button secondary" type="button" data-close-dialog="return-dialog">Cancelar</button></div>
+        </form>
+      </div>
+    </dialog>
+    <footer class="site-footer">Biblioteca Solón Argüello <span>·</span> Sistema de Gestión Bibliotecaria</footer>
+    <script src="/app.js" defer></script>
+  </body>
+</html>

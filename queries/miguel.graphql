@@ -1,0 +1,130 @@
+# Las 10 consultas avanzadas definitivas de Miguel.
+
+query MiguelsTendenciasDePrestamosPorEstado {
+  miguelLoanStatusTrend {
+    status
+    currentPeriodLoans
+    previousPeriodLoans
+    changePct
+  }
+}
+
+query MiguelsExposicionPorRetrasos {
+  miguelOverdueExposure(limit: 50) {
+    loanId
+    userName
+    email
+    inventoryCode
+    title
+    genre
+    dueDate
+    daysOverdue
+    overdueBand
+  }
+}
+
+query MiguelsDesempenoDeUsuarios {
+  miguelBorrowerPerformance(limit: 50) {
+    userId
+    fullName
+    totalLoans
+    returnedLoans
+    overdueLoans
+    lateReturns
+    onTimeReturns
+    uniqueBooks
+    averageLoanDays
+    lateReturnPct
+  }
+}
+
+query MiguelsTendenciaDevolucionesPorMes {
+  miguelMonthlyReturnTrend {
+    year
+    month
+    returnedLoans
+    lateReturns
+    onTimeRatePct
+    previousMonthReturns
+    changePct
+  }
+}
+
+query MiguelsAntiguedadDeRetrasosPorGenero {
+  miguelOverdueAging {
+    genre
+    overdueBand
+    overdueLoans
+    affectedBorrowers
+    averageDaysOverdue
+    genreOverduePct
+  }
+}
+
+query MiguelsPortafolioActualDePrestamos {
+  miguelCurrentLoanPortfolio(limit: 50) {
+    loanId
+    userName
+    email
+    inventoryCode
+    title
+    genre
+    loanDate
+    dueDate
+    effectiveStatus
+    daysRemaining
+    daysOverdue
+  }
+}
+
+query MiguelsCirculacionPorGenero {
+  miguelGenreCirculation {
+    genre
+    totalLoans
+    activeLoans
+    overdueLoans
+    returnedLoans
+    uniqueBorrowers
+    uniqueBooks
+    lateReturns
+    lateReturnPct
+    averageLoanDays
+  }
+}
+
+query MiguelsComparacionDePeriodos {
+  miguelLoanPeriodComparison {
+    currentPeriodLoans
+    previousPeriodLoans
+    currentReturnedLoans
+    previousReturnedLoans
+    currentOverdueLoans
+    previousOverdueLoans
+    changePct
+    currentPeriodStart
+    previousPeriodStart
+  }
+}
+
+query MiguelsSegmentacionDeUsuarios {
+  miguelBorrowerSegments {
+    segment
+    userCount
+    averageLoans
+    usersWithOverdue
+    averageGenreDiversity
+  }
+}
+
+query MiguelsEficienciaDeDevoluciones {
+  miguelReturnEfficiency {
+    genre
+    returnedLoans
+    onTimeReturns
+    lateReturns
+    onTimeRatePct
+    averageLoanDays
+    averageDaysLate
+    distinctBorrowers
+  }
+}

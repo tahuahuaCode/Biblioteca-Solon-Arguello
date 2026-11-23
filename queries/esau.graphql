@@ -1,0 +1,150 @@
+# Las 10 consultas avanzadas definitivas de Esaú.
+
+query EsausDisponibilidadYDemandaPorGenero {
+  esauAvailabilityByGenre {
+    genre
+    totalBooks
+    totalCopies
+    availableCopies
+    loanedCopies
+    maintenanceCopies
+    availabilityPct
+    utilizationPct
+    totalLoans
+    loansLast30Days
+    loansPrevious30Days
+    demandChangePct
+    loansPerCopy
+  }
+}
+
+query EsausCirculacionPorAutor {
+  esauAuthorCirculation(limit: 20) {
+    author
+    bookCount
+    totalCopies
+    availableCopies
+    totalLoans
+    distinctBorrowers
+    lateReturns
+    lateReturnPct
+    loansPerBook
+  }
+}
+
+query EsausCirculacionPorDecada {
+  esauDecadeCirculation {
+    decade
+    bookCount
+    totalCopies
+    totalLoans
+    overdueLoans
+    availabilityPct
+    loansPerBook
+  }
+}
+
+query EsausComparacionDeDemandaPorGenero {
+  esauGenrePeriodAnalysis {
+    genre
+    totalCopies
+    availableCopies
+    availabilityPct
+    currentPeriodLoans
+    previousPeriodLoans
+    demandChangePct
+    loansPerAvailableCopy
+  }
+}
+
+query EsausHistorialDeEjemplaresDisponibles {
+  esauAvailableCopyHistory(genre: "Novela", limit: 50) {
+    copyId
+    inventoryCode
+    title
+    author
+    genre
+    totalLoans
+    uniqueBorrowers
+    lastLoanDate
+    averageLoanDays
+    daysSinceLastLoan
+  }
+}
+
+query EsausRiesgoDeDesabasto {
+  esauSupplyRisk(limit: 50) {
+    bookId
+    title
+    author
+    genre
+    totalCopies
+    availableCopies
+    availabilityPct
+    totalLoans
+    uniqueBorrowers
+    demandPerAvailableCopy
+    stockRisk
+  }
+}
+
+query EsausRankingDeDemanda {
+  esauBookDemandRanking(limit: 20) {
+    bookId
+    title
+    author
+    genre
+    totalLoans
+    uniqueBorrowers
+    loansLast90Days
+    availabilityPct
+    overdueRatePct
+    demandScore
+  }
+}
+
+query EsausUtilizacionDeInventarioPorGenero {
+  esauGenreUtilization {
+    genre
+    totalCopies
+    availableCopies
+    loanedCopies
+    maintenanceCopies
+    utilizedCopies
+    utilizationPct
+    loanEvents
+    loansPerCopy
+    uniqueBorrowers
+  }
+}
+
+query EsausSaludDelCatalogo {
+  esauCatalogHealth {
+    totalBooks
+    booksWithCopies
+    booksWithoutCopies
+    booksWithoutAvailability
+    totalCopies
+    availableCopies
+    availabilityPct
+    totalLoanEvents
+    loansLast90Days
+    distinctAuthors
+  }
+}
+
+query EsausDemandaContraDisponibilidad {
+  esauBookDemandSupply(limit: 50) {
+    bookId
+    title
+    author
+    genre
+    totalCopies
+    availableCopies
+    availabilityPct
+    loansLast90Days
+    uniqueBorrowers
+    demandPerAvailableCopy
+    demandClass
+  }
+}

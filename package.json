@@ -1,0 +1,33 @@
+{
+  "name": "biblio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sistema web básico para administrar una biblioteca",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test",
+    "check:db": "node src/check-db.js",
+    "seed": "node src/seed.js",
+    "verify:data": "node src/verify-data.js",
+    "check:analytics": "node src/check-analytics.js",
+    "backup:data": "node src/backup-data.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@apollo/server": "^5.5.2",
+    "@as-integrations/express4": "^1.1.2",
+    "@graphql-tools/schema": "^10.1.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "graphql": "^16.10.0",
+    "graphql-tag": "^2.12.6",
+    "mongoose": "^8.9.5"
+  },
+  "overrides": {
+    "@graphql-tools/utils": "^12.1.0"
+  }
+}
